@@ -1,11 +1,15 @@
 self.addEventListener("install", e => {
     e.waitUntil(
         caches.open("static").then(cache => {
-            return cache.addAll(["./","style.css","p404.png"]);
+            return cache.addAll(["./","./dist/css/calculator.css","c.png"]);
         })
     );
 });
 
 self.addEventListener("fetch", e => {
-    console.log('Intercepting fetch request for: ${e.request.url}');
+    e.respondWith(
+        caches.match(e.request).then(response =>{
+            return response || fetch(e.request);
+        })
+    );
 });
